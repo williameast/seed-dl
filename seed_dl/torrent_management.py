@@ -81,6 +81,10 @@ def ListTorrents(directory):
                 )
                 torrents.append(entry)
 
+    if len(torrents) == 0:
+        print(f"No torrents found in {directory}, aborting.")
+        return
+
     return torrents
 
 
