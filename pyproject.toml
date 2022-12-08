@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "seed-dl"
+version = "0.1.0"
+description = ""
+authors = ["William East <william.east@mail.mcgill.ca>"]
+readme = "README.md"
+packages = [{include = "seed_dl"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pyyaml = "^6.0"
+torrentool = "^1.1.1"
+python-lsp-server = "^1.6.0"
+bencodepy = "^0.9.5"
+bencode-py = "^4.0.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
