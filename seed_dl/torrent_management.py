@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 import os
 import json
-import bencode
+import bencodepy
 
 # TODO DEFINITIONS ONLY FOR TESTING PLEASE DELETE
 
@@ -11,6 +11,9 @@ DIRECTORY = '/home/weast/org/projects/Dev/Python/seed_dl_2/seed_dl/seed_dl'
 TESTTORRENT =  "/home/weast/org/projects/Dev/Python/seed_dl_2/seed_dl/seed_dl/Omni Trio - The Haunted Science - 1996 (CD - MP3 - 320)-1046102.torrent"
 ###################################################################
 ###################################################################
+
+
+
 @dataclass
 class Torrent:
     # name of the .torrent file.
@@ -20,6 +23,13 @@ class Torrent:
     download_complete_on_local: bool  # if this is true, then it means that the file is completely finished, i.e. downloaded on server, FTPed into the local dir, no further actions to be done.
     path: str  # this is the composite filepath to the location of the torrent.
     torrentfile: str
+
+    def save(self, location, filename):
+        print(json.dumps(self.__dict__))
+
+    def load(self, location, filename):
+        pass
+
 
 
 def checkMimes(file, allowed_extensions):
@@ -47,10 +57,14 @@ def loadTorrentList(torrentlist="torrents.json"):
 
 
 def getTorrentName(filename):
-    '''Get the name of a torrent from the corresponding .torrent file.'''
+    '''
+    Get the name of a torrent from the corresponding .torrent file.
+    The dependency of bencode has produced some complications. currently the drop in
+    bencodepy replacement reads the dict as bytes. that is why the conversion happens.
+    '''
     with open(filename, "rb") as fin:
-        torrent = bencode.bdecode(fin.read())
-        return torrent["info"]["name"]
+        torrent = bencodepy.decode(fin.read())[b"info"][b"name"]
+        return torrent.decode("utf8")
 
 
 def ListTorrents(directory):
