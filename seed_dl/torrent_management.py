@@ -23,6 +23,7 @@ class Torrent:
     torrentname: str  # decode the bencode to get the name as the torrent file would be called as it downloads
     download_complete_on_server: bool  # on initiation this is False. when the server is queries on the status, it is updated
     download_complete_on_local: bool  # if this is true, then it means that the file is completely finished, i.e. downloaded on server, FTPed into the local dir, no further actions to be done.
+    torrent_uploaded_to_server: bool # if this is true, then .torrent file is in watch folder.
     path: str  # this is the composite filepath to the location of the torrent.
     timestamp: datetime
 
@@ -47,7 +48,7 @@ def getTorrentName(filename):
         return torrent.decode("utf8")
 
 
-def saveTorrentFilelist(torrents, filename):
+def saveTorrentFilelist(torrents, filename="torrents.json"):
     '''
     Save torrent file at location with filename.
     '''
@@ -64,7 +65,11 @@ def loadTorrentFilelist(filename):
     return out
 
 
-def ListTorrents(directory, torrentfilelist="torrents.json", appendExisting=True):
+def ListTorrents(directory,
+                 torrentfilelist="torrents.json",
+                 appendExisting=True,
+                 readOnly=False,
+                 printTorrents=True):
     """
     generates a list of torrents - if torrent is file and ends in .torrent,
     add it to list, and uses torrent data form.
@@ -78,7 +83,7 @@ def ListTorrents(directory, torrentfilelist="torrents.json", appendExisting=True
         try:
             torrents = loadTorrentFilelist(torrentfilelist)
             print("loaded in existing torrent file list.")
-            for torrent in torrents: # prevent duplicate .torrentfiles being uploaded.
+            for torrent in torrents:  # prevent duplicate .torrentfiles being uploaded.
                 torrentnames.append(torrent["name"])
         except IOError:
             print(f"No torrent list found at {torrentfilelist}, creating a new one.")
@@ -92,6 +97,7 @@ def ListTorrents(directory, torrentfilelist="torrents.json", appendExisting=True
                     torrentname=getTorrentName(entry),
                     download_complete_on_local=False,
                     download_complete_on_server=False,
+                    torrent_uploaded_to_server=False,
                     path=entry.path,
                     timestamp=datetime.now().isoformat())
                 # the use of __dict__ solves my JSON not subscriptable problem but seems
@@ -105,9 +111,12 @@ def ListTorrents(directory, torrentfilelist="torrents.json", appendExisting=True
 
     if count == 0:
         print("No new torrents found!")
+        return
+
+    if printTorrents or readOnly:
+        for torrent in torrents:
+            print(torrent["name"])
     else:
         print(f"Added {count} torrentfiles in {directory} to the torrent list.")
-
-    saveTorrentFilelist(torrents, torrentfilelist)
 
     return torrents
