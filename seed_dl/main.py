@@ -3,6 +3,7 @@
 import parsed_args
 import torrent_management
 import ftp_management
+import os
 
 if __name__ == "__main__":
     # handle the arguments passed in the command line.
@@ -31,9 +32,17 @@ if __name__ == "__main__":
         sftp.connect()
         print("Connection established.")
 
+    if args.list:
+        for torrent in torrents:
+            print(torrent["name"])
+
     if args.upload:
         # set CWD to Watch folder
         sftp.changeWorkingDirectory(remotePath="watch")
+
+        # currently I am getting Permission denied errors. not sure exactly why.
+        # the strange thing is that file uploads work fine. something with the pathing and such.
+
 
         # loop through torrent list, and send them to the seedbox
         for torrent in torrents:
@@ -44,4 +53,7 @@ if __name__ == "__main__":
     if args.checkserver:
         for torrent in torrents:
             if torrent["download_complete_on_server"]:
-                ftp_management.checkTorrentFileDownloaded()
+                torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloaded(torrent["torrentname"], SEEDBOX_DL_FOLDER)
+
+    if not args.print:
+        torrent_management.saveTorrentFilelist(torrents)
