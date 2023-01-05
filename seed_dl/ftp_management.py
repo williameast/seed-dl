@@ -62,7 +62,7 @@ class SeedboxFTP:
     # TODO add error handling, conditionally producing the response message only in a verbose mode.
     def Upload(self, localFile):
         fileObject = open(localFile, "rb")
-        file2BeSavedAs = localFile.name
+        file2BeSavedAs = localFile
         ftpCommand = "STOR %s" % file2BeSavedAs
         ftpResponseMessage = self.connection.storbinary(ftpCommand, fp=fileObject)
         print(ftpResponseMessage)

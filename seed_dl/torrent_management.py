@@ -65,11 +65,11 @@ def loadTorrentFilelist(filename):
     return out
 
 
-def ListTorrents(directory,
+def listTorrents(directory,
                  torrentfilelist="torrents.json",
                  appendExisting=True,
                  readOnly=False,
-                 printTorrents=True):
+                 printNewTorrents=False):
     """
     generates a list of torrents - if torrent is file and ends in .torrent,
     add it to list, and uses torrent data form.
@@ -111,9 +111,8 @@ def ListTorrents(directory,
 
     if count == 0:
         print("No new torrents found!")
-        return
 
-    if printTorrents or readOnly:
+    if printNewTorrents or readOnly:
         for torrent in torrents:
             print(torrent["name"])
     else:
