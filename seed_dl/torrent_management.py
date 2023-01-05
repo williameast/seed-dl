@@ -78,11 +78,10 @@ def ListTorrents(directory, torrentfilelist="torrents.json", appendExisting=True
         try:
             torrents = loadTorrentFilelist(torrentfilelist)
             print("loaded in existing torrent file list.")
-            for torrent in torrents: # hacky way to prevent duplicate .torrentfiles being uploaded. FIXME
+            for torrent in torrents: # prevent duplicate .torrentfiles being uploaded.
                 torrentnames.append(torrent["name"])
         except IOError:
-            print(f"No torrent cache list found at {torrentfilelist}, creating a new one.")
-
+            print(f"No torrent list found at {torrentfilelist}, creating a new one.")
 
     with os.scandir(directory) as localdir:
         for entry in localdir:
@@ -99,7 +98,6 @@ def ListTorrents(directory, torrentfilelist="torrents.json", appendExisting=True
                 # like it makes the assignment of the datalcass redundant
                 torrents.append(entry.__dict__)
                 count += 1
-
 
     if len(torrents) == 0:
         print(f"No torrents found in {directory}, aborting.")
