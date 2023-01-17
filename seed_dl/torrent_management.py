@@ -104,6 +104,7 @@ def listTorrents(directory,
                 # like it makes the assignment of the datalcass redundant
                 torrents.append(entry.__dict__)
                 count += 1
+                torrent_json = vars(entry)
 
     if len(torrents) == 0:
         print(f"No torrents found in {directory}, aborting.")
