@@ -22,8 +22,8 @@ if __name__ == "__main__":
     ########################################################################
     ########################################################################
 
-    if (args.upload or args.move or args.list or args.print):
-        torrents = torrent_management.listTorrents(directory=TARGET_DIR)
+    # if (args.upload or args.move or args.checkserver or args.list or args.print):
+    torrents = torrent_management.listTorrents(directory=TARGET_DIR)
 
     if (args.upload or args.download or args.checkserver):
         # This establishes the connection to the seedbox.
@@ -40,20 +40,39 @@ if __name__ == "__main__":
         # set CWD to Watch folder
         sftp.changeWorkingDirectory(remotePath="watch")
 
-        # currently I am getting Permission denied errors. not sure exactly why.
-        # the strange thing is that file uploads work fine. something with the pathing and such.
+        # change local path to torrent dir, saving the old one.
 
+        # TODO currently a hack to avoid the Permission Denied errors associated with the upload of the
+        # .torrent file. in the future, I want to just use the torrent.path to upload the file.
+
+        current_path = os.getcwd()
+        os.chdir(TARGET_DIR)
 
         # loop through torrent list, and send them to the seedbox
         for torrent in torrents:
-            if not torrent["torrent_uploaded_to_server"]:
-                sftp.Upload(torrent["path"])
+            if not (torrent["torrent_uploaded_to_server"] or torrent["download_complete_on_server"]):
+                sftp.Upload(torrent["name"])
                 torrent["torrent_uploaded_to_server"] = True
 
     if args.checkserver:
         for torrent in torrents:
-            if torrent["download_complete_on_server"]:
+            if not torrent["download_complete_on_server"]:
                 torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloaded(torrent["torrentname"], SEEDBOX_DL_FOLDER)
+                print(torrent["torrentname"])
+
+    if args.download:
+        sftp.changeWorkingDirectory(SEEDBOX_DL_FOLDER)
+        for torrent in torrents:
+            if not torrent["download_complete_on_local"] and torrent["download_complete_on_server"]:
+                sftp.downloadRemoteDir(torrent["torrentname"], TARGET_DIR)
 
     if not args.print:
         torrent_management.saveTorrentFilelist(torrents)
+
+
+    # this checks if an ftp instance was created, and if it does exist, disconnects.
+    try:
+        sftp.disconnect()
+        print("disconnected successfully.")
+    except NameError:
+        pass
