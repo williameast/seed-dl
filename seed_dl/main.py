@@ -18,24 +18,26 @@ if __name__ == "__main__":
     SEEDBOX_LOGIN = config["seedbox_login"]
     SEEDBOX_PW = config["seedbox_pw"]
     SEEDBOX_DL_FOLDER = config["ftp_remote_directory_for_completed_downloads"]
-    ########################################################################
-    ########################################################################
+
     ########################################################################
 
     # if (args.upload or args.move or args.checkserver or args.list or args.print):
     torrents = torrent_management.listTorrents(directory=TARGET_DIR)
 
+    ########################################################################
     if (args.upload or args.download or args.checkserver):
-        # This establishes the connection to the seedbox.
+        # This establishes the connection to the seedbox. Instantiates the SeedboxFTP object.
         sftp = ftp_management.SeedboxFTP(SEEDBOX_ADDR, SEEDBOX_LOGIN, SEEDBOX_PW)
         print(f"Attempting to connect to {SEEDBOX_ADDR}")
         sftp.connect()
         print("Connection established.")
 
+    ########################################################################
     if args.list:
         for torrent in torrents:
             print(torrent["name"])
 
+    ########################################################################
     if args.upload:
         # set CWD to Watch folder
         sftp.changeWorkingDirectory(remotePath="watch")
@@ -54,18 +56,21 @@ if __name__ == "__main__":
                 sftp.Upload(torrent["name"])
                 torrent["torrent_uploaded_to_server"] = True
 
+    ########################################################################
     if args.checkserver:
         for torrent in torrents:
             if not torrent["download_complete_on_server"]:
                 torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloaded(torrent["torrentname"], SEEDBOX_DL_FOLDER)
                 print(torrent["torrentname"])
 
+    ########################################################################
     if args.download:
         sftp.changeWorkingDirectory(SEEDBOX_DL_FOLDER)
         for torrent in torrents:
             if not torrent["download_complete_on_local"] and torrent["download_complete_on_server"]:
                 sftp.downloadRemoteDir(torrent["torrentname"], TARGET_DIR)
 
+    ########################################################################
     if not args.print:
         torrent_management.saveTorrentFilelist(torrents)
 
