@@ -6,16 +6,6 @@ import json
 import bencodepy
 from datetime import datetime
 
-
-# TODO DEFINITIONS ONLY FOR TESTING PLEASE DELETE
-
-DIRECTORY = '/home/weast/org/projects/Dev/Python/seed_dl_2/seed_dl/seed_dl'
-TESTTORRENT =  "/home/weast/org/projects/Dev/Python/seed_dl_2/seed_dl/seed_dl/Omni Trio - The Haunted Science - 1996 (CD - MP3 - 320)-1046102.torrent"
-###################################################################
-###################################################################
-
-
-
 @dataclass
 class Torrent:
     # name of the .torrent file.
