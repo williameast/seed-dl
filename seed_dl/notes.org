@@ -1,0 +1,24 @@
+#+title: Seed DL workflow
+
+
+* Naming conventions
+torrents are distributed based on a ~.torrent~ file, which produces a torrent.
+confusingly, the name of a torrent and the name of the ~.torrent~ file are mostly
+not the same. ~.torrent~ files use bencode to store the information about the
+torrent it creates. to keep that distinction clear, "torrentfile" refers to the
+torrent files downloaded as a result of adding a ~.torrent~ file to a torrent client.
+* Torrent management
+locally, torrents are tracked via the ~torrents.json~ file. This is to create a
+source of truth that can be checked against the seedbox. this will update and
+change the status of torrents according to:
+
+- has the ~.torrent~ been uploaded to the seedbox?
+- has the torrentfile finished downloading on the server?
+- has the torrentfile finished downloading locally?
+* connecting to the seedbox
+at the moment, this is designed for the shared seedboxes at seedbox.io. these
+only allow you to connect via FTP, there is no shell access and you cannot use
+sftp, or rsync, as these would be much better suited to this type of file
+transfer. Alas, we must make use of the antiquated FTP system.
+
+the credentials stored in the
