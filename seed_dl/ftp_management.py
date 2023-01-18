@@ -68,7 +68,7 @@ class SeedboxFTP:
         print(ftpResponseMessage)
         fileObject.close()
 
-    def checkTorrentfileDownloaded(self, torrentfile, directory):
+    def checkTorrentfileDownloadedRemote(self, torrentfile, directory):
         try:
             return torrentfile in self.nlstSafe(directory, stripParentFolder=True)
         except ftplib.error_perm as e:

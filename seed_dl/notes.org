@@ -33,3 +33,23 @@ This is WIP, and there are a few functionalities I would like to add:
 - first-time scanner. This would scan the seedbox for all torrents, as well as
   local torrent files to produce a database that includes all torrent files,
   local and remote.
+
+* <2023-01-18 Wed> post on RED
+Hello!
+
+I am working on a CLI seedbox torrent management tool. I use a shared seedbox with very restricted possibilities for file syncing. What is sets out to do:
+
+1) detect .torrent files in your download directory
+2) move them into the WATCH folder of the seedbox
+3) check if the torrent has completed successfully
+4) download the torrent file locally
+
+running as a background process, this means as a user, you can just download a .torrent, and a short while later it will appear in your library!
+
+it all works (will release soon!) but I want to implement a tool that can detect the content type of a torrent. (movie, audio, ISO etc). using MIMEtypes (i.e. the file extensions) is one option, but I think you could use the name of the .torrent file itself. take for instance:
+
+John Surman - Invisible Threads - 2018 (WEB - FLAC - Lossless)-1612811.torrent
+
+I am sure a very simple decision tree could detect that this is an audio torrent. however, to train a decision tree I need a large set of torrent names to train the model. Can anyone point me towards a dataset of torrent filenames? bonus points if this has been classified into filetypes beforehand.
+
+alternatively, any good ideas on how I could detect the type of file produced by a .torrent file?

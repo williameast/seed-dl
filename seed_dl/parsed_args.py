@@ -32,7 +32,7 @@ def parseArgs():
     )  # move torrent files locally
     parser.add_argument(
         "--checkserver",
-        "-c",
+        "-cs",
         action="store_true",
         help="Check if server has finished downloading",
     )
@@ -49,6 +49,12 @@ def parseArgs():
         action="store_true",
         help="print torrents currently tracked in the .json.",
     )
+    parser.add_argument(
+        "--checklocal",
+        "-cm",
+        action="store_true",
+        help="check if files exist locally",
+    )  # move torrent files locally
     return parser.parse_args()
 
 

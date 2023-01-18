@@ -14,10 +14,12 @@ if __name__ == "__main__":
 
     TORRENT_DIR = config["torrent_dir"]
     TARGET_DIR = config["target_dir"]
+    TORRENTFILE_DIR = config["torrentfile_dir"] # location where torrentfiles are put, to check against
     SEEDBOX_ADDR = config["seedbox_addr"]
     SEEDBOX_LOGIN = config["seedbox_login"]
     SEEDBOX_PW = config["seedbox_pw"]
     SEEDBOX_DL_FOLDER = config["ftp_remote_directory_for_completed_downloads"]
+
 
     ########################################################################
 
@@ -44,7 +46,7 @@ if __name__ == "__main__":
 
         # change local path to torrent dir, saving the old one.
 
-        # TODO currently a hack to avoid the Permission Denied errors associated with the upload of the
+        # HACK currently a hack to avoid the Permission Denied errors associated with the upload of the
         # .torrent file. in the future, I want to just use the torrent.path to upload the file.
 
         current_path = os.getcwd()
@@ -60,8 +62,17 @@ if __name__ == "__main__":
     if args.checkserver:
         for torrent in torrents:
             if not torrent["download_complete_on_server"]:
-                torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloaded(torrent["torrentname"], SEEDBOX_DL_FOLDER)
+                torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloadedRemote(torrent["torrentname"], SEEDBOX_DL_FOLDER)
                 print(torrent["torrentname"])
+
+    if args.checklocal:
+        local_torrentfiles = os.listdir(TORRENTFILE_DIR)
+
+        for torrent in torrents:
+            if not torrent["download_complete_on_local"]:
+                torrent["download_complete_on_local"] = torrent["torrentname"] in local_torrentfiles
+
+
 
     ########################################################################
     if args.download:
@@ -69,11 +80,11 @@ if __name__ == "__main__":
         for torrent in torrents:
             if not torrent["download_complete_on_local"] and torrent["download_complete_on_server"]:
                 sftp.downloadRemoteDir(torrent["torrentname"], TARGET_DIR)
+                torrent["download_complete_on_local"] = True
 
     ########################################################################
     if not args.print:
         torrent_management.saveTorrentFilelist(torrents)
-
 
     # this checks if an ftp instance was created, and if it does exist, disconnects.
     try:
