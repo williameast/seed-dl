@@ -18,6 +18,12 @@ class Torrent:
     timestamp: datetime
 
 
+def checktorrentfileDownloadedLocally(torrentfile, location):
+    '''
+    Check to see if a given torrent has already been added to a given location.
+    '''
+    return torrentfile in os.listdir(location)
+
 def checkMimes(file, allowed_extensions):
     """Check if the file is in the correct extensions list, if not, return False"""
     if os.path.splitext(file)[1] in allowed_extensions:
