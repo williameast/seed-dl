@@ -29,10 +29,13 @@ if __name__ == "__main__":
     ########################################################################
     if (args.upload or args.download or args.checkserver):
         # This establishes the connection to the seedbox. Instantiates the SeedboxFTP object.
-        sftp = ftp_management.SeedboxFTP(SEEDBOX_ADDR, SEEDBOX_LOGIN, SEEDBOX_PW)
-        print(f"Attempting to connect to {SEEDBOX_ADDR}")
-        sftp.connect()
-        print("Connection established.")
+        try:
+            sftp = ftp_management.SeedboxFTP(SEEDBOX_ADDR, SEEDBOX_LOGIN, SEEDBOX_PW)
+            print(f"Attempting to connect to {SEEDBOX_ADDR}")
+            sftp.connect()
+            print("Connection established.")
+        except Exception as e:
+            print(type(e))
 
     ########################################################################
     if args.list:
@@ -52,26 +55,36 @@ if __name__ == "__main__":
         current_path = os.getcwd()
         os.chdir(TARGET_DIR)
 
-        # loop through torrent list, and send them to the seedbox
+        # loop through torrent list, and send them to the seedbox. currently, duplicates are auto-rejected.
+        # TODO add check to prevent duplicate uploads after reinstantiation
         for torrent in torrents:
-            if not (torrent["torrent_uploaded_to_server"] or torrent["download_complete_on_server"]):
+            if not torrent["torrent_uploaded_to_server"]:
                 sftp.Upload(torrent["name"])
                 torrent["torrent_uploaded_to_server"] = True
+            if torrent["download_complete_on_server"]:
+                torrent["torrent_uploaded_to_server"] = True # change to true if the file is already on the seedbox!
+                #
+        os.chdir(current_path)
+
 
     ########################################################################
     if args.checkserver:
+        print("Completed Downloads in Seedbox:")
         for torrent in torrents:
             if not torrent["download_complete_on_server"]:
                 torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloadedRemote(torrent["torrentname"], SEEDBOX_DL_FOLDER)
                 print(torrent["torrentname"])
+            if torrent["download_complete_on_server"]:
+                torrent["torrent_uploaded_to_server"] = True #  change to true  if the torrent is completed download!
 
     if args.checklocal:
         local_torrentfiles = os.listdir(TORRENTFILE_DIR)
 
         for torrent in torrents:
             if not torrent["download_complete_on_local"]:
-                torrent["download_complete_on_local"] = torrent["torrentname"] in local_torrentfiles
-
+                # check to see if the file is inside the destination directory already. prevents having to redownload.
+                # TODO would be nice if it diffs the file to ensure that a broken transfer file is detected (i.e. smaller filesize on destination)
+                 torrent["download_complete_on_local"] = torrent["torrentname"] in local_torrentfiles
 
 
     ########################################################################
