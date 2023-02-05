@@ -22,6 +22,9 @@ sftp, or rsync, as these would be much better suited to this type of file
 transfer. Alas, we must make use of the antiquated FTP system.
 
 the credentials stored in the config file. obviously keep those secrets safe.
+* torrent type identifier
+to predict what type of torrent is created, we have a few options.
+1. We can use the ~.torrent~ file to predict
 * Future additions
 This is WIP, and there are a few functionalities I would like to add:
 
