@@ -5,6 +5,7 @@ import os
 import json
 import bencodepy
 from datetime import datetime
+import mimetypes
 
 @dataclass
 class Torrent:
@@ -15,6 +16,7 @@ class Torrent:
     download_complete_on_local: bool  # if this is true, then it means that the file is completely finished, i.e. downloaded on server, FTPed into the local dir, no further actions to be done.
     torrent_uploaded_to_server: bool # if this is true, then .torrent file is in watch folder.
     path: str  # this is the composite filepath to the location of the torrent.
+    mimetype: str
     timestamp: datetime
 
 
@@ -61,6 +63,23 @@ def loadTorrentFilelist(filename):
     return out
 
 
+def detectMediaType(filename):
+    '''
+    Detects the largest files in a torrent just using the .torrent file. this is then used to predict the media type
+    of a torrent so that we can shunt it to the correct place in the computer. This is currently tested on the types of files I see, i.e. albums etc.
+    I have yet to implement it in such a way that you can travse directories in the torrent itself. '''
+    filelist = []
+    with open(filename, 'rb') as f:
+        files = bencodepy.decode(f.read())[b"info"][b"files"]
+    for file in files:
+        name = str(file[b"path"][0].decode("utf8"))
+        size = int(file[b"length"])
+        mimetype = mimetypes.guess_type(name)[0]
+        filelist.append({"name": name, "size": size, "mimetype": mimetype})
+    out = sorted(filelist, key=lambda d: d["size"], reverse=True)
+    return out[0]["mimetype"] # returns the mimetype of the largest file in the torrent.
+
+
 def listTorrents(directory,
                  torrentfilelist="torrents.json",
                  appendExisting=True,
@@ -95,6 +114,7 @@ def listTorrents(directory,
                     download_complete_on_server=False,
                     torrent_uploaded_to_server=False,
                     path=entry.path,
+                    mimetype=detectMediaType(entry),
                     timestamp=datetime.now().isoformat())
                 # the use of __dict__ solves my JSON not subscriptable problem but seems
                 # like it makes the assignment of the datalcass redundant
@@ -116,3 +136,4 @@ def listTorrents(directory,
         print(f"Added {count} torrentfiles in {directory} to the torrent list.")
 
     return torrents
+

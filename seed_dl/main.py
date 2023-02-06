@@ -26,6 +26,9 @@ if __name__ == "__main__":
     # if (args.upload or args.move or args.checkserver or args.list or args.print):
     torrents = torrent_management.listTorrents(directory=TARGET_DIR)
 
+    if args.flushcache:
+        os.remove("torrents.json")
+
     ########################################################################
     if (args.upload or args.download or args.checkserver):
         # This establishes the connection to the seedbox. Instantiates the SeedboxFTP object.
