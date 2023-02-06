@@ -55,6 +55,12 @@ def parseArgs():
         action="store_true",
         help="check if files exist locally",
     )  # move torrent files locally
+    parser.add_argument(
+        "--flushcache",
+        "-fl",
+        action="store_true",
+        help="DEBUG: delete the torrents.json file"
+    )
     return parser.parse_args()
 
 
