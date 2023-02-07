@@ -162,7 +162,7 @@ class SeedboxFTP:
         overwrite=False,
         guess_by_extension=True,
     ):
-        path = path.lstrip("/")
+        path = path.lstrip("/") # TODO adapt to pathlib
         original_directory = (
             os.getcwd()
         )  # remember working directory before function is executed
@@ -179,36 +179,3 @@ class SeedboxFTP:
             original_directory
         )  # reset working directory to what it was before function exec
 
-
-################### TESTING
-
-import parsed_args
-import ftp_management
-import torrent_management
-
-config = parsed_args.getConfigData()
-
-TORRENT_DIR = config["torrent_dir"]
-TARGET_DIR = config["target_dir"]
-TORRENTFILE_DIR = config["torrentfile_dir"] # location where torrentfiles are put, to check against
-SEEDBOX_ADDR = config["seedbox_addr"]
-SEEDBOX_LOGIN = config["seedbox_login"]
-SEEDBOX_PW = config["seedbox_pw"]
-SEEDBOX_DL_FOLDER = config["ftp_remote_directory_for_completed_downloads"]
-
-
-########################################################################
-
-# if (args.upload or args.move or args.checkserver or args.list or args.print):
-torrents = torrent_management.listTorrents(directory=TARGET_DIR)
-
-########################################################################
-# This establishes the connection to the seedbox. Instantiates the SeedboxFTP object.
-sftp = ftp_management.SeedboxFTP(SEEDBOX_ADDR, SEEDBOX_LOGIN, SEEDBOX_PW)
-print(f"Attempting to connect to {SEEDBOX_ADDR}")
-sftp.connect()
-print("Connection established.")
-
-
-
-sftp
