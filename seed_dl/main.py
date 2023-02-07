@@ -4,6 +4,7 @@ import parsed_args
 import torrent_management
 import ftp_management
 import os
+import sys
 
 if __name__ == "__main__":
     # handle the arguments passed in the command line.
@@ -15,10 +16,12 @@ if __name__ == "__main__":
     TORRENT_DIR = config["torrent_dir"]
     TARGET_DIR = config["target_dir"]
     TORRENTFILE_DIR = config["torrentfile_dir"] # location where torrentfiles are put, to check against
+    DL_DIR = config["download_dir"]
     SEEDBOX_ADDR = config["seedbox_addr"]
     SEEDBOX_LOGIN = config["seedbox_login"]
     SEEDBOX_PW = config["seedbox_pw"]
     SEEDBOX_DL_FOLDER = config["ftp_remote_directory_for_completed_downloads"]
+
 
 
     ########################################################################
@@ -27,7 +30,12 @@ if __name__ == "__main__":
     torrents = torrent_management.listTorrents(directory=TARGET_DIR)
 
     if args.flushcache:
-        os.remove("torrents.json")
+        try:
+            os.remove("torrents.json")
+            print("file removed.")
+            sys.exit()
+        except OSError as e:
+            print("could not delete file", e.strerror)
 
     ########################################################################
     if (args.upload or args.download or args.checkserver):
@@ -95,7 +103,8 @@ if __name__ == "__main__":
         sftp.changeWorkingDirectory(SEEDBOX_DL_FOLDER)
         for torrent in torrents:
             if not torrent["download_complete_on_local"] and torrent["download_complete_on_server"]:
-                sftp.downloadRemoteDir(torrent["torrentname"], TARGET_DIR)
+                dl_directory = torrent_management.localMediaFileCategorizer(torrent["mimetype"], DL_DIR)
+                sftp.downloadRemoteDir(torrent["torrentname"], dl_directory)
                 torrent["download_complete_on_local"] = True
 
     ########################################################################

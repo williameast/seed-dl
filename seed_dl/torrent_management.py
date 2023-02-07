@@ -6,6 +6,7 @@ import json
 import bencodepy
 from datetime import datetime
 import mimetypes
+from pathlib import Path
 
 @dataclass
 class Torrent:
@@ -63,6 +64,16 @@ def loadTorrentFilelist(filename):
     return out
 
 
+def localMediaFileCategorizer(category, directory):
+    # checks directory if category exists. if not, creates it.
+    # TODO needs to handle error if a file is called category but is not a folder.
+    filepath = os.path.join(directory, category)
+    if not os.path.exists(filepath):
+        Path(filepath).mkdir()
+        print(f"creating a new category: {category} in {directory}")
+    return filepath
+
+
 def detectMediaType(filename):
     '''
     Detects the largest files in a torrent just using the .torrent file. this is then used to predict the media type
@@ -72,12 +83,22 @@ def detectMediaType(filename):
     with open(filename, 'rb') as f:
         files = bencodepy.decode(f.read())[b"info"][b"files"]
     for file in files:
-        name = str(file[b"path"][0].decode("utf8"))
+        # concatenates the contents of the path list. this gives us the mimetypes independently of
+        # how nested the directories is.
+        path = file[b"path"]
+        name = ""
+        for item in path:
+            item = item.decode("utf8")
+            name += item
         size = int(file[b"length"])
         mimetype = mimetypes.guess_type(name)[0]
         filelist.append({"name": name, "size": size, "mimetype": mimetype})
-    out = sorted(filelist, key=lambda d: d["size"], reverse=True)
-    return out[0]["mimetype"] # returns the mimetype of the largest file in the torrent.
+    # take the largest file, split the string to get just the filetype from the mimetype.
+     # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
+    out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"]
+    return out # returns the mimetype of the largest file in the torrent.
+
+neu = 'Neu! - 50! - 2022 (CD - MP3 - 320)-3904120.torrent'
 
 
 def listTorrents(directory,
@@ -120,7 +141,7 @@ def listTorrents(directory,
                 # like it makes the assignment of the datalcass redundant
                 torrents.append(entry.__dict__)
                 count += 1
-                torrent_json = vars(entry)
+                # torrent_json = vars(entry)
 
     if len(torrents) == 0:
         print(f"No torrents found in {directory}, aborting.")
@@ -137,3 +158,6 @@ def listTorrents(directory,
 
     return torrents
 
+# x = "Omni Trio - The Haunted Science - 1996 (CD - MP3 - 320)-1046102.torrent"
+# y = detectMediaType(x)
+# print(y)
