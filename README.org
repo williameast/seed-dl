@@ -21,15 +21,40 @@ Optionally, seed-dl can
 - scan a directory to work out which torrents exist locally and which ones remotely
   to update the database (add the directories to scan against in the
   config.yaml)
+* Assumptions
+ - your Seedbox supports FTP
+ - your Seedbox can move finished torrents to a directory within itself
+   automatically (like RuTorrent, used on seedbox.io)
+ - you can run python scripts locally
 
 * Installation
 clone the repo, and adapt the ~config\_example.yaml~ file.
+
+then, inside the Seedbox, make sure to set the Path for where finished
+downloads go:
+#+begin_quote
+Autotools > Path to Finished Downloads: "/home/files/<seedboxusername>/Completed
+Downloads"
+#+end_quote
+
+and
+
+#+begin_quote
+Operation Type: Move
+#+end_quote
+
+Now, when a torrent is complete, the data will be moved to the folder, and
+seed-dl can detect it!
 
 * Usage
 assuming you have python installed, run
 #+begin_src sh
 python main.py
 #+end_src
+
+each ~.torrent~ will be scanned for the largest file in it, that will then
+determine where that file will be downloaded to in the ~download_dir~. It will
+create them as needed.
 * Naming conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
 confusingly, the name of a torrent and the name of the ~.torrent~ file are mostly

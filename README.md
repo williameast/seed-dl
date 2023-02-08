@@ -1,21 +1,22 @@
 
 # Table of Contents
 
-1.  [What is seed-dl?](#orgb5d2b3c)
-2.  [Installation](#orgdb86d72)
-3.  [Usage](#org9e40ba5)
-4.  [Naming conventions](#orgc0f52af)
-5.  [Torrent management](#org0f3681d)
-6.  [connecting to the seedbox](#org383d9b2)
-    1.  [torrent type identifier](#org508799e)
-    2.  [initial scanner](#org2d62c73)
-    3.  [improve the CLI interface](#org54b7a6a)
-    4.  [Daemon/background process](#org9bf4146)
-    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#orgfbf3f42)
+1.  [What is seed-dl?](#orge4ec9b3)
+2.  [Assumptions](#orge0c99ee)
+3.  [Installation](#org754f83d)
+4.  [Usage](#orgeb88f77)
+5.  [Naming conventions](#orgd79d331)
+6.  [Torrent management](#org5275634)
+7.  [connecting to the seedbox](#org4d5597c)
+    1.  [torrent type identifier](#orgb666146)
+    2.  [initial scanner](#org3ee9d48)
+    3.  [improve the CLI interface](#org158a73b)
+    4.  [Daemon/background process](#org1eaa116)
+    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#orga6e409e)
 
 
 
-<a id="orgb5d2b3c"></a>
+<a id="orge4ec9b3"></a>
 
 # What is seed-dl?
 
@@ -42,14 +43,37 @@ Optionally, seed-dl can
     config.yaml)
 
 
-<a id="orgdb86d72"></a>
+<a id="orge0c99ee"></a>
+
+# Assumptions
+
+-   your Seedbox supports FTP
+-   your Seedbox can move finished torrents to a directory within itself
+    automatically (like RuTorrent, used on seedbox.io)
+-   you can run python scripts locally
+
+
+<a id="org754f83d"></a>
 
 # Installation
 
 clone the repo, and adapt the `config\_example.yaml` file.
 
+then, inside the Seedbox, make sure to set the Path for where finished
+downloads go:
 
-<a id="org9e40ba5"></a>
+> Autotools > Path to Finished Downloads: &ldquo;/home/files/<seedboxusername>/Completed
+> Downloads&rdquo;
+
+and
+
+> Operation Type: Move
+
+Now, when a torrent is complete, the data will be moved to the folder, and
+seed-dl can detect it!
+
+
+<a id="orgeb88f77"></a>
 
 # Usage
 
@@ -57,8 +81,12 @@ assuming you have python installed, run
 
     python main.py
 
+each `.torrent` will be scanned for the largest file in it, that will then
+determine where that file will be downloaded to in the `download_dir`. It will
+create them as needed.
 
-<a id="orgc0f52af"></a>
+
+<a id="orgd79d331"></a>
 
 # Naming conventions
 
@@ -69,7 +97,7 @@ torrent it creates. to keep that distinction clear, &ldquo;torrentfile&rdquo; re
 torrent files downloaded as a result of adding a `.torrent` file to a torrent client.
 
 
-<a id="org0f3681d"></a>
+<a id="org5275634"></a>
 
 # Torrent management
 
@@ -82,7 +110,7 @@ change the status of torrents according to:
 -   has the torrentfile finished downloading locally?
 
 
-<a id="org383d9b2"></a>
+<a id="org4d5597c"></a>
 
 # connecting to the seedbox
 
@@ -94,7 +122,7 @@ transfer. Alas, we must make use of the antiquated FTP system.
 the credentials stored in the config file. obviously keep those secrets safe.
 
 
-<a id="org508799e"></a>
+<a id="orgb666146"></a>
 
 ## DONE torrent type identifier
 
@@ -104,7 +132,7 @@ torrent. this lets us move the finished download into a sensible folder for
 later processing.
 
 
-<a id="org2d62c73"></a>
+<a id="org3ee9d48"></a>
 
 ## TODO initial scanner
 
@@ -112,7 +140,7 @@ scan the seedbox for all torrents and local directories to produce a full
 database.
 
 
-<a id="org54b7a6a"></a>
+<a id="org158a73b"></a>
 
 ## TODO improve the CLI interface
 
@@ -120,7 +148,7 @@ different colours. integrate a Verbose mode
 to reduce CLI clutter.
 
 
-<a id="org9bf4146"></a>
+<a id="org1eaa116"></a>
 
 ## TODO Daemon/background process
 
@@ -128,7 +156,7 @@ One day it would be nice if the whole process was in the background. click and
 download a torrent, wait, enjoy it&rsquo;s content!
 
 
-<a id="orgfbf3f42"></a>
+<a id="orga6e409e"></a>
 
 ## TODO Check compatibility in WIN and OSX (only tested on Linux currently)
 
