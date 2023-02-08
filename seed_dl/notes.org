@@ -23,19 +23,22 @@ transfer. Alas, we must make use of the antiquated FTP system.
 
 the credentials stored in the config file. obviously keep those secrets safe.
 * torrent type identifier
-to predict what type of torrent is created, we have a few options.
-1. We can use the ~.torrent~ file to predict
+to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
+or whatever of the largest file in a torrent to predict the nature of the
+torrent. this lets us move the finished download into a sensible folder for
+later processing.
 * Future additions
 This is WIP, and there are a few functionalities I would like to add:
 
-- torrent type identifier. using things in the name (such as the file
-  extensions, naming conventions (e.g. DVDrip, 1080p for movies, FLAC, 320 MP3
-  for music, Win x64 for applications)) to classify what a torrent is. this
-  could be used to correctly move files to different locations, or to
-  selectively pull only a certain type.
 - first-time scanner. This would scan the seedbox for all torrents, as well as
   local torrent files to produce a database that includes all torrent files,
   local and remote.
+- dashboard from the json file (using flask?)
+- an interactive CLI interface
+- ensuring it ports to other OS systems
+- a background process so that it auto scans for new torrents etc.
+
+
 
 * <2023-01-18 Wed> post on RED
 Hello!

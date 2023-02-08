@@ -24,6 +24,15 @@ if __name__ == "__main__":
 
 
 
+    ##############################
+    # Arg Switchboard
+
+    if sum(list(vars(args).values())) == 0: # what to do if no arguments are given
+        args.upload = True
+        args.checkserver = True
+        args.download = True
+
+
     ########################################################################
 
     # if (args.upload or args.move or args.checkserver or args.list or args.print):
@@ -74,19 +83,20 @@ if __name__ == "__main__":
                 torrent["torrent_uploaded_to_server"] = True
             if torrent["download_complete_on_server"]:
                 torrent["torrent_uploaded_to_server"] = True # change to true if the file is already on the seedbox!
-                #
+
         os.chdir(current_path)
 
 
     ########################################################################
     if args.checkserver:
-        print("Completed Downloads in Seedbox:")
+        print("Unfinished downloads in Seedbox:")
         for torrent in torrents:
             if not torrent["download_complete_on_server"]:
                 torrent["download_complete_on_server"] = sftp.checkTorrentfileDownloadedRemote(torrent["torrentname"], SEEDBOX_DL_FOLDER)
                 print(torrent["torrentname"])
             if torrent["download_complete_on_server"]:
                 torrent["torrent_uploaded_to_server"] = True #  change to true  if the torrent is completed download!
+
 
     if args.checklocal:
         local_torrentfiles = os.listdir(TORRENTFILE_DIR)
@@ -114,6 +124,5 @@ if __name__ == "__main__":
     # this checks if an ftp instance was created, and if it does exist, disconnects.
     try:
         sftp.disconnect()
-        print("disconnected successfully.")
     except NameError:
         pass
