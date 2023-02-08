@@ -1,4 +1,3 @@
 /seed_dl/config.yaml
 /seed_dl/torrents.json
-*.pyc
-__pycache__/*
+/seed_dl/__pycache__/*
