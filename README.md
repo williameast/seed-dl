@@ -1,25 +1,28 @@
 
 # Table of Contents
 
-1.  [What is seed-dl?](#orga93423e)
-2.  [Assumptions](#org37b39c7)
-3.  [Installation](#org3048378)
-4.  [Usage](#org034f127)
-5.  [If You Want to Help&#x2026;](#orgdfa4850)
-    1.  [Naming Conventions](#orge7564e1)
-    2.  [Torrent Management](#org7488c6a)
-    3.  [connecting to the seedbox](#orgccdd50a)
-6.  [To-do list](#org9fbf809)
-    1.  [torrent type identifier](#org32aee49)
-    2.  [initial scanner](#org368c919)
-    3.  [improve the CLI interface](#org9a16121)
-    4.  [Daemon/background process](#org255f8eb)
-    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#org232253a)
-    6.  [Testing Suite](#org09b9d7e)
+1.  [What is seed-dl?](#orga8ad966)
+2.  [Assumptions](#orga8857f2)
+3.  [Prerequisites](#org1c30946)
+4.  [Installation](#org80ee3d9)
+5.  [Usage](#orgf54b561)
+    1.  [Default](#org92e305f)
+    2.  [Optional flags](#org9cc1675)
+6.  [If You Want to Help&#x2026;](#org2cecf2a)
+    1.  [Naming Conventions](#orgb794a02)
+    2.  [Torrent Management](#orgfe76b42)
+    3.  [connecting to the seedbox](#org28e06bd)
+7.  [To-do list](#org187e1d6)
+    1.  [torrent type identifier](#org50556cd)
+    2.  [initial scanner](#orgefb0d3e)
+    3.  [improve the CLI interface](#org04b76a9)
+    4.  [Daemon/background process](#orgf08f7bf)
+    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#orgb9be28a)
+    6.  [Testing Suite](#org516e934)
 
 
 
-<a id="orga93423e"></a>
+<a id="orga8ad966"></a>
 
 # What is seed-dl?
 
@@ -46,7 +49,7 @@ Optionally, seed-dl can
     config.yaml)
 
 
-<a id="org37b39c7"></a>
+<a id="orga8857f2"></a>
 
 # Assumptions
 
@@ -56,11 +59,27 @@ Optionally, seed-dl can
 -   you can run python scripts locally
 
 
-<a id="org3048378"></a>
+<a id="org1c30946"></a>
+
+# Prerequisites
+
+Seed-dl was developed using Python 3.10.
+
+dependencies need to be installed manually (for now) or use a poetry shell
+
+    python = "^3.10"
+    pyyaml = "^6.0"
+    torrentool = "^1.1.1"
+    python-lsp-server = "^1.6.0"
+    bencode-py = "^4.0.0"
+    bencodepy = "^0.9.5"
+
+
+<a id="org80ee3d9"></a>
 
 # Installation
 
-clone the repo, and adapt the `config\_example.yaml` file.
+clone the repo, and adapt the `config_example.yaml` file.
 
 then, inside the Seedbox, make sure to set the Path for where finished
 downloads go (note your seedbox username will be differnt):
@@ -78,26 +97,56 @@ seed-dl can detect it!
 You can name the completed download folder whatever you want, it just needs to
 match what is in the `config.yaml`.
 
+optionally, if you want to scan directories to ensure you are not downloading duplicate
+torrents, just set up those directory paths in the `config.yaml`.
 
-<a id="org034f127"></a>
+
+<a id="orgf54b561"></a>
 
 # Usage
 
-assuming you have python installed, run
+
+<a id="org92e305f"></a>
+
+## Default
+
+assuming you have python installed, run, from within the cloned directory:
 
     python main.py
 
+this will
+
+-   scan the download directory for new torrents
+-   add them to torrents.json
+-   load them to the seedbox
+-   check which torrents have finished downloading
+-   download them, placing them in a folder corresponding to their type.
+
 each `.torrent` will be scanned for the largest file in it, that will then
-determine where that file will be downloaded to in the `download_dir`. It will
-create them as needed.
+determine where that file will be downloaded to in the `download_dir`.
 
 
-<a id="orgdfa4850"></a>
+<a id="org9cc1675"></a>
+
+## Optional flags
+
+    -h, --help          show this help message and exit
+    -u, --upload        upload files to seedbox.io using the credentials in the config
+    -p, --print         print files in inbound torrent folder
+    -m, --move          move files in inbound folder to outbound torrent folder
+    -cs, --checkserver  Check if server has finished downloading
+    -d, --download      Download torrents from seedbox.io to the specified folder.
+    -l, --list          print torrents currently tracked in the .json.
+    -cm, --checklocal   check if files exist locally
+    -fl, --flushcache   DEBUG: delete the torrents.json file
+
+
+<a id="org2cecf2a"></a>
 
 # If You Want to Help&#x2026;
 
 
-<a id="orge7564e1"></a>
+<a id="orgb794a02"></a>
 
 ## Naming Conventions
 
@@ -108,7 +157,7 @@ torrent it creates. to keep that distinction clear, &ldquo;torrentfile&rdquo; re
 torrent files downloaded as a result of adding a `.torrent` file to a torrent client.
 
 
-<a id="org7488c6a"></a>
+<a id="orgfe76b42"></a>
 
 ## Torrent Management
 
@@ -121,7 +170,7 @@ change the status of torrents according to:
 -   has the torrentfile finished downloading locally?
 
 
-<a id="orgccdd50a"></a>
+<a id="org28e06bd"></a>
 
 ## connecting to the seedbox
 
@@ -133,12 +182,12 @@ transfer. Alas, we must make use of the antiquated FTP system.
 the credentials stored in the config file. obviously keep those secrets safe.
 
 
-<a id="org9fbf809"></a>
+<a id="org187e1d6"></a>
 
 # To-do list
 
 
-<a id="org32aee49"></a>
+<a id="org50556cd"></a>
 
 ## DONE torrent type identifier
 
@@ -148,7 +197,7 @@ torrent. this lets us move the finished download into a sensible folder for
 later processing.
 
 
-<a id="org368c919"></a>
+<a id="orgefb0d3e"></a>
 
 ## TODO initial scanner
 
@@ -156,15 +205,15 @@ scan the seedbox for all torrents and local directories to produce a full
 database.
 
 
-<a id="org9a16121"></a>
+<a id="org04b76a9"></a>
 
-## TODO improve the CLI interface
+## STRT improve the CLI interface
 
 different colours. integrate a Verbose mode
 to reduce CLI clutter.
 
 
-<a id="org255f8eb"></a>
+<a id="orgf08f7bf"></a>
 
 ## TODO Daemon/background process
 
@@ -172,12 +221,12 @@ One day it would be nice if the whole process was in the background. click and
 download a torrent, wait, enjoy it&rsquo;s content!
 
 
-<a id="org232253a"></a>
+<a id="orgb9be28a"></a>
 
 ## TODO Check compatibility in WIN and OSX (only tested on Linux currently)
 
 
-<a id="org09b9d7e"></a>
+<a id="org516e934"></a>
 
 ## TODO Testing Suite
 

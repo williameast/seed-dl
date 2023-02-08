@@ -26,9 +26,22 @@ Optionally, seed-dl can
  - your Seedbox can move finished torrents to a directory within itself
    automatically (like RuTorrent, used on seedbox.io)
  - you can run python scripts locally
+* Prerequisites
+Seed-dl was developed using Python 3.10.
+
+dependencies need to be installed manually (for now) or use a poetry shell
+
+#+begin_src toml
+python = "^3.10"
+pyyaml = "^6.0"
+torrentool = "^1.1.1"
+python-lsp-server = "^1.6.0"
+bencode-py = "^4.0.0"
+bencodepy = "^0.9.5"
+#+end_src
 
 * Installation
-clone the repo, and adapt the ~config\_example.yaml~ file.
+clone the repo, and adapt the ~config_example.yaml~ file.
 
 then, inside the Seedbox, make sure to set the Path for where finished
 downloads go (note your seedbox username will be differnt):
@@ -49,15 +62,39 @@ seed-dl can detect it!
 You can name the completed download folder whatever you want, it just needs to
 match what is in the ~config.yaml~.
 
+
+optionally, if you want to scan directories to ensure you are not downloading duplicate
+torrents, just set up those directory paths in the ~config.yaml~.
+
 * Usage
-assuming you have python installed, run
+** Default
+assuming you have python installed, run, from within the cloned directory:
 #+begin_src sh
 python main.py
 #+end_src
 
+this will
+- scan the download directory for new torrents
+- add them to torrents.json
+- load them to the seedbox
+- check which torrents have finished downloading
+- download them, placing them in a folder corresponding to their type.
+
 each ~.torrent~ will be scanned for the largest file in it, that will then
-determine where that file will be downloaded to in the ~download_dir~. It will
-create them as needed.
+determine where that file will be downloaded to in the ~download_dir~.
+
+** Optional flags
+#+begin_src
+  -h, --help          show this help message and exit
+  -u, --upload        upload files to seedbox.io using the credentials in the config
+  -p, --print         print files in inbound torrent folder
+  -m, --move          move files in inbound folder to outbound torrent folder
+  -cs, --checkserver  Check if server has finished downloading
+  -d, --download      Download torrents from seedbox.io to the specified folder.
+  -l, --list          print torrents currently tracked in the .json.
+  -cm, --checklocal   check if files exist locally
+  -fl, --flushcache   DEBUG: delete the torrents.json file
+#+end_src
 * If You Want to Help...
 ** Naming Conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
@@ -89,7 +126,7 @@ later processing.
 ** TODO initial scanner
     scan the seedbox for all torrents and local directories to produce a full
     database.
-** TODO improve the CLI interface
+** STRT improve the CLI interface
     different colours. integrate a Verbose mode
     to reduce CLI clutter.
 ** TODO Daemon/background process
