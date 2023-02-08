@@ -77,8 +77,7 @@ def localMediaFileCategorizer(category, directory):
 def detectMediaType(filename):
     '''
     Detects the largest files in a torrent just using the .torrent file. this is then used to predict the media type
-    of a torrent so that we can shunt it to the correct place in the computer. This is currently tested on the types of files I see, i.e. albums etc.
-    I have yet to implement it in such a way that you can travse directories in the torrent itself. '''
+    of a torrent so that we can shunt it to the correct place in the computer. it can handle nested torrent structures. '''
     filelist = []
     with open(filename, 'rb') as f:
         files = bencodepy.decode(f.read())[b"info"][b"files"]
@@ -95,10 +94,10 @@ def detectMediaType(filename):
         filelist.append({"name": name, "size": size, "mimetype": mimetype})
     # take the largest file, split the string to get just the filetype from the mimetype.
      # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
-    out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"]
+    out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
+    if out == "None": # not sure how good this is as an idea.
+        out = "uncategorized"
     return out # returns the mimetype of the largest file in the torrent.
-
-neu = 'Neu! - 50! - 2022 (CD - MP3 - 320)-3904120.torrent'
 
 
 def listTorrents(directory,
@@ -143,18 +142,15 @@ def listTorrents(directory,
                 count += 1
                 # torrent_json = vars(entry)
 
-    if len(torrents) == 0:
-        print(f"No torrents found in {directory}, aborting.")
-        return
-
     if count == 0:
-        print("No new torrents found!")
+        print(f"No new torrents found in {directory}")
 
-    if printNewTorrents or readOnly:
-        for torrent in torrents:
-            print(torrent["name"])
-    else:
-        print(f"Added {count} torrentfiles in {directory} to the torrent list.")
+    if count > 0:
+        if printNewTorrents or readOnly:
+            for torrent in torrents:
+                print(torrent["name"])
+        else:
+            print(f"Added {count} torrentfiles in {directory} to the torrent list.")
 
     return torrents
 
