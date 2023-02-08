@@ -12,52 +12,51 @@ def parseArgs():
     )
     # only upload files to seedbox.io,
     parser.add_argument(
-        "--upload",
         "-u",
+        "--upload",
         action="store_true",
         help="upload files to seedbox.io using the\
         credentials in the config",
     )
     parser.add_argument(
-        "--print",
         "-p",
+        "--print",
         action="store_true",
         help="print files in inbound torrent folder",
     )
     parser.add_argument(
-        "--move",
         "-m",
+        "--move",
         action="store_true",
         help="move files in inbound folder to outbound torrent folder",
     )  # move torrent files locally
     parser.add_argument(
-        "--checkserver",
         "-cs",
+        "--checkserver",
         action="store_true",
         help="Check if server has finished downloading",
     )
     parser.add_argument(
-        "--download",
         "-d",
+        "--download",
         action="store_true",
         help="Download torrents from seedbox.io to the specified folder.",
     )  # download torrents
-
     parser.add_argument(
-        "--list",
         "-l",
+        "--list",
         action="store_true",
         help="print torrents currently tracked in the .json.",
     )
     parser.add_argument(
-        "--checklocal",
         "-cm",
+        "--checklocal",
         action="store_true",
         help="check if files exist locally",
     )  # move torrent files locally
     parser.add_argument(
-        "--flushcache",
         "-fl",
+        "--flushcache",
         action="store_true",
         help="DEBUG: delete the torrents.json file"
     )
