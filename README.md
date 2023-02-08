@@ -1,22 +1,25 @@
 
 # Table of Contents
 
-1.  [What is seed-dl?](#orge4ec9b3)
-2.  [Assumptions](#orge0c99ee)
-3.  [Installation](#org754f83d)
-4.  [Usage](#orgeb88f77)
-5.  [Naming conventions](#orgd79d331)
-6.  [Torrent management](#org5275634)
-7.  [connecting to the seedbox](#org4d5597c)
-    1.  [torrent type identifier](#orgb666146)
-    2.  [initial scanner](#org3ee9d48)
-    3.  [improve the CLI interface](#org158a73b)
-    4.  [Daemon/background process](#org1eaa116)
-    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#orga6e409e)
+1.  [What is seed-dl?](#orga93423e)
+2.  [Assumptions](#org37b39c7)
+3.  [Installation](#org3048378)
+4.  [Usage](#org034f127)
+5.  [If You Want to Help&#x2026;](#orgdfa4850)
+    1.  [Naming Conventions](#orge7564e1)
+    2.  [Torrent Management](#org7488c6a)
+    3.  [connecting to the seedbox](#orgccdd50a)
+6.  [To-do list](#org9fbf809)
+    1.  [torrent type identifier](#org32aee49)
+    2.  [initial scanner](#org368c919)
+    3.  [improve the CLI interface](#org9a16121)
+    4.  [Daemon/background process](#org255f8eb)
+    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#org232253a)
+    6.  [Testing Suite](#org09b9d7e)
 
 
 
-<a id="orge4ec9b3"></a>
+<a id="orga93423e"></a>
 
 # What is seed-dl?
 
@@ -43,7 +46,7 @@ Optionally, seed-dl can
     config.yaml)
 
 
-<a id="orge0c99ee"></a>
+<a id="org37b39c7"></a>
 
 # Assumptions
 
@@ -53,16 +56,16 @@ Optionally, seed-dl can
 -   you can run python scripts locally
 
 
-<a id="org754f83d"></a>
+<a id="org3048378"></a>
 
 # Installation
 
 clone the repo, and adapt the `config\_example.yaml` file.
 
 then, inside the Seedbox, make sure to set the Path for where finished
-downloads go:
+downloads go (note your seedbox username will be differnt):
 
-> Autotools > Path to Finished Downloads: &ldquo;/home/files/<seedboxusername>/Completed
+> Autotools > Path to Finished Downloads: &ldquo;/home/files/seedboxusername/Completed
 > Downloads&rdquo;
 
 and
@@ -72,8 +75,11 @@ and
 Now, when a torrent is complete, the data will be moved to the folder, and
 seed-dl can detect it!
 
+You can name the completed download folder whatever you want, it just needs to
+match what is in the `config.yaml`.
 
-<a id="orgeb88f77"></a>
+
+<a id="org034f127"></a>
 
 # Usage
 
@@ -86,9 +92,14 @@ determine where that file will be downloaded to in the `download_dir`. It will
 create them as needed.
 
 
-<a id="orgd79d331"></a>
+<a id="orgdfa4850"></a>
 
-# Naming conventions
+# If You Want to Help&#x2026;
+
+
+<a id="orge7564e1"></a>
+
+## Naming Conventions
 
 torrents are distributed based on a `.torrent` file, which produces a torrent.
 confusingly, the name of a torrent and the name of the `.torrent` file are mostly
@@ -97,9 +108,9 @@ torrent it creates. to keep that distinction clear, &ldquo;torrentfile&rdquo; re
 torrent files downloaded as a result of adding a `.torrent` file to a torrent client.
 
 
-<a id="org5275634"></a>
+<a id="org7488c6a"></a>
 
-# Torrent management
+## Torrent Management
 
 locally, torrents are tracked via the `torrents.json` file. This is to create a
 source of truth that can be checked against the seedbox. this will update and
@@ -110,9 +121,9 @@ change the status of torrents according to:
 -   has the torrentfile finished downloading locally?
 
 
-<a id="org4d5597c"></a>
+<a id="orgccdd50a"></a>
 
-# connecting to the seedbox
+## connecting to the seedbox
 
 at the moment, this is designed for the shared seedboxes at seedbox.io. these
 only allow you to connect via FTP, there is no shell access and you cannot use
@@ -122,7 +133,12 @@ transfer. Alas, we must make use of the antiquated FTP system.
 the credentials stored in the config file. obviously keep those secrets safe.
 
 
-<a id="orgb666146"></a>
+<a id="org9fbf809"></a>
+
+# To-do list
+
+
+<a id="org32aee49"></a>
 
 ## DONE torrent type identifier
 
@@ -132,7 +148,7 @@ torrent. this lets us move the finished download into a sensible folder for
 later processing.
 
 
-<a id="org3ee9d48"></a>
+<a id="org368c919"></a>
 
 ## TODO initial scanner
 
@@ -140,7 +156,7 @@ scan the seedbox for all torrents and local directories to produce a full
 database.
 
 
-<a id="org158a73b"></a>
+<a id="org9a16121"></a>
 
 ## TODO improve the CLI interface
 
@@ -148,7 +164,7 @@ different colours. integrate a Verbose mode
 to reduce CLI clutter.
 
 
-<a id="org1eaa116"></a>
+<a id="org255f8eb"></a>
 
 ## TODO Daemon/background process
 
@@ -156,7 +172,15 @@ One day it would be nice if the whole process was in the background. click and
 download a torrent, wait, enjoy it&rsquo;s content!
 
 
-<a id="orga6e409e"></a>
+<a id="org232253a"></a>
 
 ## TODO Check compatibility in WIN and OSX (only tested on Linux currently)
+
+
+<a id="org09b9d7e"></a>
+
+## TODO Testing Suite
+
+currently no tests are performed. would be better to make sure we can handle
+edge cases like non-standard characters etc.
 

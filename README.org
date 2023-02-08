@@ -31,9 +31,9 @@ Optionally, seed-dl can
 clone the repo, and adapt the ~config\_example.yaml~ file.
 
 then, inside the Seedbox, make sure to set the Path for where finished
-downloads go:
+downloads go (note your seedbox username will be differnt):
 #+begin_quote
-Autotools > Path to Finished Downloads: "/home/files/<seedboxusername>/Completed
+Autotools > Path to Finished Downloads: "/home/files/seedboxusername/Completed
 Downloads"
 #+end_quote
 
@@ -46,6 +46,9 @@ Operation Type: Move
 Now, when a torrent is complete, the data will be moved to the folder, and
 seed-dl can detect it!
 
+You can name the completed download folder whatever you want, it just needs to
+match what is in the ~config.yaml~.
+
 * Usage
 assuming you have python installed, run
 #+begin_src sh
@@ -55,13 +58,14 @@ python main.py
 each ~.torrent~ will be scanned for the largest file in it, that will then
 determine where that file will be downloaded to in the ~download_dir~. It will
 create them as needed.
-* Naming conventions
+* If You Want to Help...
+** Naming Conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
 confusingly, the name of a torrent and the name of the ~.torrent~ file are mostly
 not the same. ~.torrent~ files use bencode to store the information about the
 torrent it creates. to keep that distinction clear, "torrentfile" refers to the
 torrent files downloaded as a result of adding a ~.torrent~ file to a torrent client.
-* Torrent management
+** Torrent Management
 locally, torrents are tracked via the ~torrents.json~ file. This is to create a
 source of truth that can be checked against the seedbox. this will update and
 change the status of torrents according to:
@@ -69,13 +73,14 @@ change the status of torrents according to:
 - has the ~.torrent~ been uploaded to the seedbox?
 - has the torrentfile finished downloading on the server?
 - has the torrentfile finished downloading locally?
-* connecting to the seedbox
+** connecting to the seedbox
 at the moment, this is designed for the shared seedboxes at seedbox.io. these
 only allow you to connect via FTP, there is no shell access and you cannot use
 sftp, or rsync, as these would be much better suited to this type of file
 transfer. Alas, we must make use of the antiquated FTP system.
 
 the credentials stored in the config file. obviously keep those secrets safe.
+* To-do list
 ** DONE torrent type identifier
 to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
 or whatever of the largest file in a torrent to predict the nature of the
@@ -91,3 +96,6 @@ later processing.
 One day it would be nice if the whole process was in the background. click and
 download a torrent, wait, enjoy it's content!
 ** TODO Check compatibility in WIN and OSX (only tested on Linux currently)
+** TODO Testing Suite
+currently no tests are performed. would be better to make sure we can handle
+edge cases like non-standard characters etc.
