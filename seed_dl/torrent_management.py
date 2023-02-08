@@ -154,6 +154,3 @@ def listTorrents(directory,
 
     return torrents
 
-# x = "Omni Trio - The Haunted Science - 1996 (CD - MP3 - 320)-1046102.torrent"
-# y = detectMediaType(x)
-# print(y)

@@ -142,6 +142,7 @@ class SeedboxFTP:
         else:
             return bool(re.match(pattern, name))
 
+
     def cloneRemoteDir(self, name, overwrite, guess_by_extension, pattern):
         """replicates a directory on an ftp server recursively"""
 

@@ -15,12 +15,12 @@ if __name__ == "__main__":
 
     TORRENT_DIR = config["torrent_dir"]
     TARGET_DIR = config["target_dir"]
-    TORRENTFILE_DIR = config["torrentfile_dir"] # location where torrentfiles are put, to check against
     DL_DIR = config["download_dir"]
     SEEDBOX_ADDR = config["seedbox_addr"]
     SEEDBOX_LOGIN = config["seedbox_login"]
     SEEDBOX_PW = config["seedbox_pw"]
     SEEDBOX_DL_FOLDER = config["ftp_remote_directory_for_completed_downloads"]
+    FILE_DIRECTORIES = config["file_directories"]
 
 
 
@@ -31,6 +31,7 @@ if __name__ == "__main__":
         args.upload = True
         args.checkserver = True
         args.download = True
+
 
 
     ########################################################################
@@ -99,13 +100,27 @@ if __name__ == "__main__":
 
 
     if args.checklocal:
-        local_torrentfiles = os.listdir(TORRENTFILE_DIR)
+        files = []              # I am sure there is a more elegant way of doing this.
+        for location in FILE_DIRECTORIES:
+            files = files + (os.listdir(location))
 
+        count = 0
         for torrent in torrents:
             if not torrent["download_complete_on_local"]:
-                # check to see if the file is inside the destination directory already. prevents having to redownload.
-                # TODO would be nice if it diffs the file to ensure that a broken transfer file is detected (i.e. smaller filesize on destination)
-                 torrent["download_complete_on_local"] = torrent["torrentname"] in local_torrentfiles
+                torrent["download_complete_on_local"] = torrent["torrentname"] in files
+                count += 1 # increment
+        print(f"found {count} torrents in local directories.")
+
+
+
+
+
+
+        # for torrent in torrents:
+        #     if not torrent["download_complete_on_local"]:
+        #         # check to see if the file is inside the destination directory already. prevents having to redownload.
+        #         # TODO would be nice if it diffs the file to ensure that a broken transfer file is detected (i.e. smaller filesize on destination)
+        #          torrent["download_complete_on_local"] = torrent["torrentname"] in local_torrentfiles
 
 
     ########################################################################

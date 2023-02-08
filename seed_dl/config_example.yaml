@@ -13,5 +13,8 @@
 # place where the finished torrents go in the seedbox directory
 # this needs to be configured manually in RuTorrent.
     ftp_remote_directory_for_completed_downloads: "/files/Completed Downloads/"
-# place where you put the torrentfiles. This is used to check if the file already exists locally.
-    torrentfile_dir: "~/Music/"
+# places on your local computer you want to check against to see if torrent files are already downloaded.
+# you can add as many as you like.
+    file_directories:
+        - "~/Music"
+        - "~/Videos"

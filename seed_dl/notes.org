@@ -1,5 +1,29 @@
 #+title: Seed DL workflow
 
+* What is seed-dl?
+Seed-dl tries real hard to make using a seedbox convenient. when browsing
+torrent sites, I want to choose my .torrent files, run a single command and have
+the completed .torrent files on my computer - I don't want to drag and drop into
+a seedbox, use some FTP client and remember my login deets. With each run, Seed-dl scans a directory
+(default is your download directory), creates a database of the torrents it
+finds, and then uploads them to your seedbox. this triggers the download of your
+torrents. Seed-dl checks for completed downloads on each run. (*note*, this
+requires configuring the seedbox to move torrents to a folder once completed)
+
+with one run of the command, it can
+- put your .torrent files into your seedbox
+- check if the .torrent files have finished downloading
+- download the resulting files for you, throwing them into a directory by type
+  (audio, video, application)
+
+Optionally, seed-dl can
+
+- scan a directory to work out which torrents exist locally and which ones remotely
+  to update the database
+-
+
+
+
 
 * Naming conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
@@ -27,16 +51,16 @@ to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
 or whatever of the largest file in a torrent to predict the nature of the
 torrent. this lets us move the finished download into a sensible folder for
 later processing.
-* Future additions
-This is WIP, and there are a few functionalities I would like to add:
-
-- first-time scanner. This would scan the seedbox for all torrents, as well as
-  local torrent files to produce a database that includes all torrent files,
-  local and remote.
-- dashboard from the json file (using flask?)
-- an interactive CLI interface
-- ensuring it ports to other OS systems
-- a background process so that it auto scans for new torrents etc.
+** TODO initial scanner
+    scan the seedbox for all torrents and local directories to produce a full
+    database.
+** TODO improve the CLI interface
+    different colours. integrate a Verbose mode
+    to reduce CLI clutter.
+** TODO Daemon/background process
+One day it would be nice if the whole process was in the background. click and
+download a torrent, wait, enjoy it's content!
+** TODO Check compatibility in WIN and OSX (only tested on Linux currently)
 
 
 
