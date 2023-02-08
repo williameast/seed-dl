@@ -19,7 +19,19 @@ after configuring config.yaml, with one run of the command, it can
 Optionally, seed-dl can
 
 - scan a directory to work out which torrents exist locally and which ones remotely
-  to update the database (add the directories to scan against in the config.yaml)
+  to update the database (add the directories to scan against in the
+  config.yaml)
+
+* Installation
+clone the repo, and adapt the ~config\_example.yaml~ file.
+
+* Usage
+assuming you have python installed, run
+#+begin_src sh
+python main.py
+#+end_src
+
+
 
 * Naming conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
