@@ -10,7 +10,7 @@ finds, and then uploads them to your seedbox. this triggers the download of your
 torrents. Seed-dl checks for completed downloads on each run. (*note*, this
 requires configuring the seedbox to move torrents to a folder once completed)
 
-with one run of the command, it can
+after configuring config.yaml, with one run of the command, it can
 - put your .torrent files into your seedbox
 - check if the .torrent files have finished downloading
 - download the resulting files for you, throwing them into a directory by type
@@ -19,11 +19,7 @@ with one run of the command, it can
 Optionally, seed-dl can
 
 - scan a directory to work out which torrents exist locally and which ones remotely
-  to update the database
--
-
-
-
+  to update the database (add the directories to scan against in the config.yaml)
 
 * Naming conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
@@ -46,7 +42,7 @@ sftp, or rsync, as these would be much better suited to this type of file
 transfer. Alas, we must make use of the antiquated FTP system.
 
 the credentials stored in the config file. obviously keep those secrets safe.
-* torrent type identifier
+** DONE torrent type identifier
 to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
 or whatever of the largest file in a torrent to predict the nature of the
 torrent. this lets us move the finished download into a sensible folder for
@@ -61,25 +57,3 @@ later processing.
 One day it would be nice if the whole process was in the background. click and
 download a torrent, wait, enjoy it's content!
 ** TODO Check compatibility in WIN and OSX (only tested on Linux currently)
-
-
-
-* <2023-01-18 Wed> post on RED
-Hello!
-
-I am working on a CLI seedbox torrent management tool. I use a shared seedbox with very restricted possibilities for file syncing. What is sets out to do:
-
-1) detect .torrent files in your download directory
-2) move them into the WATCH folder of the seedbox
-3) check if the torrent has completed successfully
-4) download the torrent file locally
-
-running as a background process, this means as a user, you can just download a .torrent, and a short while later it will appear in your library!
-
-it all works (will release soon!) but I want to implement a tool that can detect the content type of a torrent. (movie, audio, ISO etc). using MIMEtypes (i.e. the file extensions) is one option, but I think you could use the name of the .torrent file itself. take for instance:
-
-John Surman - Invisible Threads - 2018 (WEB - FLAC - Lossless)-1612811.torrent
-
-I am sure a very simple decision tree could detect that this is an audio torrent. however, to train a decision tree I need a large set of torrent names to train the model. Can anyone point me towards a dataset of torrent filenames? bonus points if this has been classified into filetypes beforehand.
-
-alternatively, any good ideas on how I could detect the type of file produced by a .torrent file?
