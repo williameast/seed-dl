@@ -30,9 +30,6 @@ assuming you have python installed, run
 #+begin_src sh
 python main.py
 #+end_src
-
-
-
 * Naming conventions
 torrents are distributed based on a ~.torrent~ file, which produces a torrent.
 confusingly, the name of a torrent and the name of the ~.torrent~ file are mostly
