@@ -1,4 +1,3 @@
-#+title: Seed DL workflow
 
 * What is seed-dl?
 Seed-dl tries real hard to make using a seedbox convenient. when browsing
