@@ -3,6 +3,7 @@
 import parsed_args
 import torrent_management
 import ftp_management
+import cacheinfo
 import os
 import sys
 
@@ -59,8 +60,7 @@ if __name__ == "__main__":
 
     ########################################################################
     if args.list:
-        for torrent in torrents:
-            print(torrent["name"])
+        cacheinfo.showIncompleteFiles(torrents)
 
     ########################################################################
     if args.upload:
