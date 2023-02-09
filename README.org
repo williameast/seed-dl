@@ -116,21 +116,21 @@ transfer. Alas, we must make use of the antiquated FTP system.
 
 the credentials stored in the config file. obviously keep those secrets safe.
 * To-do list
-** DONE torrent type identifier
+** torrent type identifier
 to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
 or whatever of the largest file in a torrent to predict the nature of the
 torrent. this lets us move the finished download into a sensible folder for
 later processing.
-** TODO initial scanner
+** initial scanner
     scan the seedbox for all torrents and local directories to produce a full
     database.
-** STRT improve the CLI interface
+** improve the CLI interface
     different colours. integrate a Verbose mode
     to reduce CLI clutter.
-** TODO Daemon/background process
+** Daemon/background process
 One day it would be nice if the whole process was in the background. click and
 download a torrent, wait, enjoy it's content!
-** TODO Check compatibility in WIN and OSX (only tested on Linux currently)
-** TODO Testing Suite
+** Check compatibility in WIN and OSX (only tested on Linux currently)
+** Testing Suite
 currently no tests are performed. would be better to make sure we can handle
 edge cases like non-standard characters etc.
