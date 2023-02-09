@@ -40,13 +40,13 @@ def parseArgs():
         "-d",
         "--download",
         action="store_true",
-        help="Download torrents from seedbox.io to the specified folder.",
+        help="Download torrents from seedbox.io to the specified folder",
     )  # download torrents
     parser.add_argument(
         "-l",
         "--list",
         action="store_true",
-        help="print torrents currently tracked in the .json.",
+        help="print torrents currently tracked in the .json that are not completed",
     )
     parser.add_argument(
         "-cm",

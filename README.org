@@ -88,7 +88,7 @@ determine where that file will be downloaded to in the ~download_dir~.
   -m, --move          move files in inbound folder to outbound torrent folder
   -cs, --checkserver  Check if server has finished downloading
   -d, --download      Download torrents from seedbox.io to the specified folder.
-  -l, --list          print torrents currently tracked in the .json.
+  -l, --list          print torrents currently tracked in the .json that are not completed.
   -cm, --checklocal   check if files exist locally
   -fl, --flushcache   DEBUG: delete the torrents.json file
 #+end_src
