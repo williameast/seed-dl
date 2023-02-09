@@ -1,34 +1,14 @@
++++
+title = "Seed DL workflow"
+author = ["William East"]
+draft = false
++++
 
-# Table of Contents
-
-1.  [What is seed-dl?](#orga8ad966)
-2.  [Assumptions](#orga8857f2)
-3.  [Prerequisites](#org1c30946)
-4.  [Installation](#org80ee3d9)
-5.  [Usage](#orgf54b561)
-    1.  [Default](#org92e305f)
-    2.  [Optional flags](#org9cc1675)
-6.  [If You Want to Help&#x2026;](#org2cecf2a)
-    1.  [Naming Conventions](#orgb794a02)
-    2.  [Torrent Management](#orgfe76b42)
-    3.  [connecting to the seedbox](#org28e06bd)
-7.  [To-do list](#org187e1d6)
-    1.  [torrent type identifier](#org50556cd)
-    2.  [initial scanner](#orgefb0d3e)
-    3.  [improve the CLI interface](#org04b76a9)
-    4.  [Daemon/background process](#orgf08f7bf)
-    5.  [Check compatibility in WIN and OSX (only tested on Linux currently)](#orgb9be28a)
-    6.  [Testing Suite](#org516e934)
-
-
-
-<a id="orga8ad966"></a>
-
-# What is seed-dl?
+## What is seed-dl? {#what-is-seed-dl}
 
 Seed-dl tries real hard to make using a seedbox convenient. when browsing
 torrent sites, I want to choose my .torrent files, run a single command and have
-the completed .torrent files on my computer - I don&rsquo;t want to drag and drop into
+the completed .torrent files on my computer - I don't want to drag and drop into
 a seedbox, use some FTP client and remember my login deets. With each run, Seed-dl scans a directory
 (default is your download directory), creates a database of the torrents it
 finds, and then uploads them to your seedbox. this triggers the download of your
@@ -49,9 +29,7 @@ Optionally, seed-dl can
     config.yaml)
 
 
-<a id="orga8857f2"></a>
-
-# Assumptions
+## Assumptions {#assumptions}
 
 -   your Seedbox supports FTP
 -   your Seedbox can move finished torrents to a directory within itself
@@ -59,33 +37,29 @@ Optionally, seed-dl can
 -   you can run python scripts locally
 
 
-<a id="org1c30946"></a>
-
-# Prerequisites
+## Prerequisites {#prerequisites}
 
 Seed-dl was developed using Python 3.10.
 
 dependencies need to be installed manually (for now) or use a poetry shell
 
-    python = "^3.10"
-    pyyaml = "^6.0"
-    torrentool = "^1.1.1"
-    python-lsp-server = "^1.6.0"
-    bencode-py = "^4.0.0"
-    bencodepy = "^0.9.5"
+```toml
+python = "^3.10"
+pyyaml = "^6.0"
+torrentool = "^1.1.1"
+bencodepy = "^0.9.5"
+```
 
 
-<a id="org80ee3d9"></a>
-
-# Installation
+## Installation {#installation}
 
 clone the repo, and adapt the `config_example.yaml` file.
 
 then, inside the Seedbox, make sure to set the Path for where finished
 downloads go (note your seedbox username will be differnt):
 
-> Autotools > Path to Finished Downloads: &ldquo;/home/files/seedboxusername/Completed
-> Downloads&rdquo;
+> Autotools &gt; Path to Finished Downloads: "/home/files/seedboxusername/Completed
+> Downloads"
 
 and
 
@@ -101,18 +75,16 @@ optionally, if you want to scan directories to ensure you are not downloading du
 torrents, just set up those directory paths in the `config.yaml`.
 
 
-<a id="orgf54b561"></a>
-
-# Usage
+## Usage {#usage}
 
 
-<a id="org92e305f"></a>
-
-## Default
+### Default {#default}
 
 assuming you have python installed, run, from within the cloned directory:
 
-    python main.py
+```sh
+python main.py
+```
 
 this will
 
@@ -126,40 +98,34 @@ each `.torrent` will be scanned for the largest file in it, that will then
 determine where that file will be downloaded to in the `download_dir`.
 
 
-<a id="org9cc1675"></a>
+### Optional flags {#optional-flags}
 
-## Optional flags
-
-    -h, --help          show this help message and exit
-    -u, --upload        upload files to seedbox.io using the credentials in the config
-    -p, --print         print files in inbound torrent folder
-    -m, --move          move files in inbound folder to outbound torrent folder
-    -cs, --checkserver  Check if server has finished downloading
-    -d, --download      Download torrents from seedbox.io to the specified folder.
-    -l, --list          print torrents currently tracked in the .json.
-    -cm, --checklocal   check if files exist locally
-    -fl, --flushcache   DEBUG: delete the torrents.json file
-
-
-<a id="org2cecf2a"></a>
-
-# If You Want to Help&#x2026;
+```nil
+  -h, --help          show this help message and exit
+  -u, --upload        upload files to seedbox.io using the credentials in the config
+  -p, --print         print files in inbound torrent folder
+  -m, --move          move files in inbound folder to outbound torrent folder
+  -cs, --checkserver  Check if server has finished downloading
+  -d, --download      Download torrents from seedbox.io to the specified folder.
+  -l, --list          print torrents currently tracked in the .json.
+  -cm, --checklocal   check if files exist locally
+  -fl, --flushcache   DEBUG: delete the torrents.json file
+```
 
 
-<a id="orgb794a02"></a>
+## If You Want to Help... {#if-you-want-to-help-dot-dot-dot}
 
-## Naming Conventions
+
+### Naming Conventions {#naming-conventions}
 
 torrents are distributed based on a `.torrent` file, which produces a torrent.
 confusingly, the name of a torrent and the name of the `.torrent` file are mostly
 not the same. `.torrent` files use bencode to store the information about the
-torrent it creates. to keep that distinction clear, &ldquo;torrentfile&rdquo; refers to the
+torrent it creates. to keep that distinction clear, "torrentfile" refers to the
 torrent files downloaded as a result of adding a `.torrent` file to a torrent client.
 
 
-<a id="orgfe76b42"></a>
-
-## Torrent Management
+### Torrent Management {#torrent-management}
 
 locally, torrents are tracked via the `torrents.json` file. This is to create a
 source of truth that can be checked against the seedbox. this will update and
@@ -170,9 +136,7 @@ change the status of torrents according to:
 -   has the torrentfile finished downloading locally?
 
 
-<a id="org28e06bd"></a>
-
-## connecting to the seedbox
+### connecting to the seedbox {#connecting-to-the-seedbox}
 
 at the moment, this is designed for the shared seedboxes at seedbox.io. these
 only allow you to connect via FTP, there is no shell access and you cannot use
@@ -182,14 +146,10 @@ transfer. Alas, we must make use of the antiquated FTP system.
 the credentials stored in the config file. obviously keep those secrets safe.
 
 
-<a id="org187e1d6"></a>
-
-# To-do list
+## To-do list {#to-do-list}
 
 
-<a id="org50556cd"></a>
-
-## DONE torrent type identifier
+### <span class="org-todo done DONE">DONE</span> torrent type identifier {#torrent-type-identifier}
 
 to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
 or whatever of the largest file in a torrent to predict the nature of the
@@ -197,39 +157,28 @@ torrent. this lets us move the finished download into a sensible folder for
 later processing.
 
 
-<a id="orgefb0d3e"></a>
-
-## TODO initial scanner
+### <span class="org-todo todo TODO">TODO</span> initial scanner {#initial-scanner}
 
 scan the seedbox for all torrents and local directories to produce a full
 database.
 
 
-<a id="org04b76a9"></a>
-
-## STRT improve the CLI interface
+### <span class="org-todo todo STRT">STRT</span> improve the CLI interface {#improve-the-cli-interface}
 
 different colours. integrate a Verbose mode
 to reduce CLI clutter.
 
 
-<a id="orgf08f7bf"></a>
-
-## TODO Daemon/background process
+### <span class="org-todo todo TODO">TODO</span> Daemon/background process {#daemon-background-process}
 
 One day it would be nice if the whole process was in the background. click and
-download a torrent, wait, enjoy it&rsquo;s content!
+download a torrent, wait, enjoy it's content!
 
 
-<a id="orgb9be28a"></a>
-
-## TODO Check compatibility in WIN and OSX (only tested on Linux currently)
+### <span class="org-todo todo TODO">TODO</span> Check compatibility in WIN and OSX (only tested on Linux currently) {#check-compatibility-in-win-and-osx--only-tested-on-linux-currently}
 
 
-<a id="org516e934"></a>
-
-## TODO Testing Suite
+### <span class="org-todo todo TODO">TODO</span> Testing Suite {#testing-suite}
 
 currently no tests are performed. would be better to make sure we can handle
 edge cases like non-standard characters etc.
-

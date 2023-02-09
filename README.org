@@ -35,8 +35,6 @@ dependencies need to be installed manually (for now) or use a poetry shell
 python = "^3.10"
 pyyaml = "^6.0"
 torrentool = "^1.1.1"
-python-lsp-server = "^1.6.0"
-bencode-py = "^4.0.0"
 bencodepy = "^0.9.5"
 #+end_src
 
