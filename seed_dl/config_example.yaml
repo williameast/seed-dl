@@ -7,9 +7,9 @@
 # directory for managing torrents
     torrent_dir: "/place/to/where/torrent/files/should/go"
 # place where .torrent files land (likely your DL folder)
-    target_dir: "¨~/Downloads/"
+    target_dir: "~/Downloads/"
 # place where the local downloads get categorized and sorted.
-    download_dir_: "~/Downloads/torrents"
+    download_dir: "~/Downloads/torrents"
 # place where the finished torrents go in the seedbox directory
 # this needs to be configured manually in RuTorrent.
     ftp_remote_directory_for_completed_downloads: "/files/Completed Downloads/"
