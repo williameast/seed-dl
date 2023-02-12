@@ -1,9 +1,9 @@
-
+n
 * What is seed-dl?
 Seed-dl tries real hard to make using a seedbox convenient. when browsing
 torrent sites, I want to choose my .torrent files, run a single command and have
 the completed .torrent files on my computer - I don't want to drag and drop into
-a seedbox, use some FTP client and remember my login deets. With each run, Seed-dl scans a directory
+a seedbox, use some FTP client and remember my login deets. With each run, seed-dl scans a directory
 (default is your download directory), creates a database of the torrents it
 finds, and then uploads them to your seedbox. this triggers the download of your
 torrents. Seed-dl checks for completed downloads on each run. (*note*, this
@@ -78,7 +78,10 @@ this will
 - download them, placing them in a folder corresponding to their type.
 
 each ~.torrent~ will be scanned for the largest file in it, that will then
-determine where that file will be downloaded to in the ~download_dir~.
+determine where that file will be downloaded to in the ~download_dir~. Note that
+this currently does not work for zipped or files in an archive format (because
+it's literally just looking at the filename ending, no fancy file header
+analysis, as that would require the files themselves and not the ~.torrent~ file)
 
 ** Optional flags
 #+begin_src
@@ -116,10 +119,7 @@ transfer. Alas, we must make use of the antiquated FTP system.
 the credentials stored in the config file. obviously keep those secrets safe.
 * To-do list
 ** torrent type identifier
-to predict what type of torrent is created, we use the mimetype (.mp3 or .mp4)
-or whatever of the largest file in a torrent to predict the nature of the
-torrent. this lets us move the finished download into a sensible folder for
-later processing.
+improve it to cope with archived files (.R#, .tar.gz, .zip)
 ** initial scanner
     scan the seedbox for all torrents and local directories to produce a full
     database.

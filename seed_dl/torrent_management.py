@@ -93,11 +93,13 @@ def detectMediaType(filename):
         mimetype = mimetypes.guess_type(name)[0]
         filelist.append({"name": name, "size": size, "mimetype": mimetype})
     # take the largest file, split the string to get just the filetype from the mimetype.
-     # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
-    out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
-    if out == "None": # not sure how good this is as an idea.
+    # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
+    out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"]
+    if out == None:
         out = "uncategorized"
-    return out # returns the mimetype of the largest file in the torrent.
+    else:
+        out = out.split("/")[0]
+    return out  # returns the mimetype of the largest file in the torrent.
 
 
 def listTorrents(directory,
