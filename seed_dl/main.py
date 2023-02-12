@@ -21,7 +21,9 @@ if __name__ == "__main__":
     SEEDBOX_LOGIN = config["seedbox_login"]
     SEEDBOX_PW = config["seedbox_pw"]
     SEEDBOX_DL_FOLDER = config["ftp_remote_directory_for_completed_downloads"]
+    SEEDBOX_WATCH_FOLDER = config["ftp_remote_watch_directory"]
     FILE_DIRECTORIES = config["file_directories"]
+
 
 
 
@@ -65,7 +67,7 @@ if __name__ == "__main__":
     ########################################################################
     if args.upload:
         # set CWD to Watch folder
-        sftp.changeWorkingDirectory(remotePath="watch")
+        sftp.changeWorkingDirectory(remotePath=SEEDBOX_WATCH_FOLDER)
 
         # change local path to torrent dir, saving the old one.
 
