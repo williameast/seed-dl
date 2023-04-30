@@ -74,32 +74,89 @@ def localMediaFileCategorizer(category, directory):
     return filepath
 
 
+    with open(filename, 'rb') as f:
+        info = bencodepy.decode(f.read())[b"info"]
+        if [b"files"] in info:
+            files = info[b"files"]
+            for file in files:
+                # concatenates the contents of the path list. this gives us the mimetypes independently of
+                # how nested the directories is.
+                path = file[b"path"]
+                name = ""
+                for item in path:
+                    item = item.decode("utf8")
+                    name += item
+                size = int(file[b"length"])
+                mimetype = mimetypes.guess_type(name)[0]
+                filelist.append({"name": name, "size": size, "mimetype": mimetype})
+            # take the largest file, split the string to get just the filetype from the mimetype.
+            # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
+            out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"]
+        else:
+            out = mimetype.guess_type(info[b"name"]).split("/")[0]
+
+
+
+
 def detectMediaType(filename):
     '''
     Detects the largest files in a torrent just using the .torrent file. this is then used to predict the media type
     of a torrent so that we can shunt it to the correct place in the computer. it can handle nested torrent structures. '''
     filelist = []
     with open(filename, 'rb') as f:
-        files = bencodepy.decode(f.read())[b"info"][b"files"]
-    for file in files:
-        # concatenates the contents of the path list. this gives us the mimetypes independently of
-        # how nested the directories is.
-        path = file[b"path"]
-        name = ""
-        for item in path:
-            item = item.decode("utf8")
-            name += item
-        size = int(file[b"length"])
-        mimetype = mimetypes.guess_type(name)[0]
-        filelist.append({"name": name, "size": size, "mimetype": mimetype})
-    # take the largest file, split the string to get just the filetype from the mimetype.
-    # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
-    out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"]
-    if out == None:
+        info = bencodepy.decode(f.read())[b"info"]
+        try:
+            name = ""
+            torrentname = info[b"name"]
+            torrentname = torrentname.decode("utf8")
+            name += torrentname
+            out = mimetypes.guess_type(name)[0]
+        except KeyError:
+            files = info[b"files"]
+            for file in files:
+                # concatenates the contents of the path list. this gives us the mimetypes independently of
+                # how nested the directories is.
+                path = file[b"path"]
+                name = ""
+                for item in path:
+                    item = item.decode("utf8")
+                    name += item
+                size = int(file[b"length"])
+                mimetype = mimetypes.guess_type(name)[0]
+                filelist.append({"name": name, "size": size, "mimetype": mimetype})
+            # take the largest file, split the string to get just the filetype from the mimetype.
+            # out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"].split("/")[0]
+            out = sorted(filelist, key=lambda d: d["size"], reverse=True)[0]["mimetype"]
+    if out is None:
         out = "uncategorized"
     else:
         out = out.split("/")[0]
     return out  # returns the mimetype of the largest file in the torrent.
+
+def detect_media_type(file_path):
+    """
+    Detect the media type of a file based on its file extension.
+
+    Args:
+        file_path (str): The path to the file to detect the media type of.
+
+    Returns:
+        str: The media type of the file.
+    """
+    media_types = {
+        'audio': ['mp3', 'wav', 'ogg', 'flac'],
+        'video': ['mp4', 'mkv', 'avi', 'wmv'],
+        'image': ['jpg', 'jpeg', 'png', 'gif'],
+        'application': ['exe', 'msi', 'dmg', 'pkg', 'torrent']
+    }
+
+    file_ext = file_path.split('.')[-1].lower()
+    for media_type, extensions in media_types.items():
+        if file_ext in extensions:
+            return media_type
+
+    return 'unknown'
+
 
 
 def listTorrents(directory,
@@ -119,7 +176,8 @@ def listTorrents(directory,
     if appendExisting:
         try:
             torrents = loadTorrentFilelist(torrentfilelist)
-            print("loaded in existing torrent file list.")
+            # print("loaded in existing torrent file list.")
+            print("Loaded in existing torrent file list")
             for torrent in torrents:  # prevent duplicate .torrentfiles being uploaded.
                 torrentnames.append(torrent["name"])
         except IOError:
